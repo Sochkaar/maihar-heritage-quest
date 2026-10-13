@@ -13,10 +13,40 @@ header:after{content:"";position:absolute;right:-70px;top:-125px;width:290px;hei
 header .wrap{position:relative;z-index:1}
 header h1{font-weight:850;letter-spacing:-.035em;line-height:1.12;margin:12px 0 9px}
 header p{max-width:620px;font-size:.98rem}
+/* Smooth, lightweight motion */
+html{scroll-behavior:smooth}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes softFade{from{opacity:0}to{opacity:1}}
+@keyframes slowFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+header .wrap{animation:riseIn .7s cubic-bezier(.2,.7,.2,1) both}
+.card{animation:riseIn .55s cubic-bezier(.2,.7,.2,1) both;transition:box-shadow .25s ease,border-color .25s ease,transform .25s ease}
+.card:hover{box-shadow:0 16px 38px rgba(31,48,35,.12);border-color:#c9b98f}
+.tag{transition:background .25s ease,transform .25s ease}
+button,.button,.header-link,.header-settings,.option,.stat,
+button:active,.button:active{transform:scale(.98)}
+.hidden{display:none!important}
+
+
+
+
+.heritage-tile:first-child img{min-height:150px}
+
+
+
+@media(max-width:600px){.heritage-tile:first-child img{min-height:155px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}header .wrap,.card{animation:none!important}.card,button,.button,.header-link,.header-settings,.option,.stat,}
 .top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:18px}
 .header-link,.header-settings{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:9px 14px;color:white;background:rgba(255,255,255,.08);text-decoration:none;font:inherit;font-size:.9rem;font-weight:700;min-height:40px}
 .header-settings{cursor:pointer}
 main.wrap{max-width:1120px;padding:24px 16px 56px}
+.role-card{position:relative;overflow:hidden}
+.team-role{border-top:4px solid var(--green2)}
+.admin-role{border-top:4px solid var(--gold)}
+.role-card .tag{letter-spacing:.045em}
+#teamGame,#adminPanel{animation:softFade .3s ease both}
+#adminPanel h2{padding-bottom:7px;border-bottom:1px solid var(--line)}
+#teamInfo{margin-top:0}
+
 .grid{grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:18px;align-items:start}
 .card{border:1px solid rgba(201,187,158,.7);border-radius:19px;padding:clamp(16px,2.3vw,24px);box-shadow:var(--shadow);margin-bottom:16px}
 h2{font-size:1.18rem;letter-spacing:-.015em}
@@ -91,11 +121,11 @@ td,th{padding:10px 9px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 
 </style></head><body>
-<header><div class="wrap"><div class="tag">MAIHAR • HERITAGE • QUEST</div><h1>Maihar Heritage Quest</h1><p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें।</p><div class="top-actions"><a href="#admin" class="header-link">Admin Dashboard ↗</a></div></div></header>
+<header><div class="wrap"><div class="tag">MAIHAR • HERITAGE • QUEST</div><h1>Maihar Heritage Quest</h1><p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें। इतिहास, संस्कृति और रोमांच की एक डिजिटल यात्रा।</p><div class="top-actions"><a href="#admin" class="header-link">Admin Dashboard ↗</a><a href="#boardCard" class="header-link">🏆 Leaderboard</a></div></div></header>
 <main class="wrap">
 <section id="setup" class="card"><h2>⚙️ One-time setup</h2><p class="small">पहले Apps Script backend deploy करें और नीचे उसका Web App URL डालें। URL इसी browser में सेव होगा।</p><label class="field">Apps Script Web App URL</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec"><div class="actions"><button onclick="saveApi()">Save backend URL</button><span id="setupMsg" class="small"></span></div></section>
 <div class="grid"><section>
-<section id="loginCard" class="card"><h2>🎟️ Team Login</h2><p class="small">Team registration Admin Dashboard से होगा। Admin द्वारा दिया गया Team Code डालें।</p><label class="field">Team Code</label><input id="teamCode" placeholder="जैसे MHQ-AB12-XYZ" autocomplete="off"><div class="actions"><button onclick="loginTeam()">गेम शुरू करें →</button></div><div id="loginMsg" class="small"></div></section>
+<section id="loginCard" class="card role-card team-role"><div class="tag">PARTICIPANT AREA</div><h2 style="margin-top:10px">🎟️ Team Login</h2><p class="small">यह हिस्सा खिलाड़ियों के लिए है। Admin से मिला Team Code डालें; फिर checkpoint QR scan करके clue हल करें।</p><label class="field">Team Code</label><input id="teamCode" placeholder="जैसे MHQ-AB12-XYZ" autocomplete="off"><div class="actions"><button onclick="loginTeam()">गेम शुरू करें →</button></div><div id="loginMsg" class="small"></div></section>
 <section id="teamGame" class="hidden">
 <div class="stats"><div class="stat"><b id="score">0</b><span>Points</span></div><div class="stat"><b id="progress">0/10</b><span>Checkpoints</span></div><div class="stat"><b id="teamState">Active</b><span>Status</span></div></div>
 <div id="teamInfo" class="card"><b id="teamName"></b><div class="small" id="teamCodeLabel"></div></div>
@@ -103,7 +133,7 @@ td,th{padding:10px 9px}
 <div id="clueCard" class="card hidden"><div class="tag" id="stopTag"></div><h2>🧩 आपका Clue</h2><p id="clueText"></p><form id="answerForm"><div id="options"></div><button id="submitBtn" type="submit">उत्तर जमा करें</button></form><div id="answerMsg" class="notice hidden"></div><div id="mapActions" class="actions hidden"><a id="mapLink" class="button gold" target="_blank" rel="noopener">Google Maps में अगला स्थान खोलें ↗</a><button class="light" onclick="startScanner()">अगला QR स्कैन करें</button></div></div>
 <div id="endCard" class="card hidden"><h2 id="endTitle"></h2><p id="endText"></p></div>
 </section>
-<section id="adminCard" class="card hidden"><h2>🔐 Admin Dashboard</h2><p class="small">Team registration, progress, QR sheet और report export.</p><div id="adminLogin"><label class="field">Admin PIN</label><input id="adminPin" type="password" placeholder="Admin PIN"><div class="actions"><button onclick="adminLogin()">Admin खोलें</button></div><div id="adminMsg" class="small"></div></div>
+<section id="adminCard" class="card hidden role-card admin-role"><div class="tag">ORGANIZER / ADMIN AREA</div><h2 style="margin-top:10px">🔐 Admin Dashboard</h2><p class="small">यह हिस्सा केवल event administrator के लिए है। यहाँ teams register करें, progress देखें और QR/report manage करें। Participants को यह administrative controls दिखाई नहीं देंगे।</p><div id="adminLogin"><label class="field">Admin PIN</label><input id="adminPin" type="password" placeholder="Admin PIN"><div class="actions"><button onclick="adminLogin()">Admin खोलें</button></div><div id="adminMsg" class="small"></div></div>
 <div id="adminPanel" class="hidden"><div class="actions" style="margin:0 0 16px"><button class="header-settings" type="button" onclick="toggleSetup()">⚙ Backend settings</button><button class="light" type="button" onclick="adminLogout()">Admin Logout</button></div><h2>नई Team Register करें</h2><label class="field">Team Name *</label><input id="newName" placeholder="जैसे Team Vindhya"><label class="field">सदस्यों के नाम</label><input id="newMembers" placeholder="सदस्य 1, सदस्य 2"><label class="field">Mobile (optional)</label><input id="newMobile" inputmode="tel" placeholder="मोबाइल नंबर"><div class="actions"><button onclick="registerTeam()">Team Register करें + Code बनाएं</button><button class="light" onclick="refreshAdmin()">Refresh dashboard</button><button class="light" onclick="downloadCsv()">CSV Export</button><button class="light" onclick="makeQrSheet()">Checkpoint QR Sheet</button><button class="light" onclick="window.print()">Print</button></div><div id="createdTeam" class="notice hidden"></div><div id="qrSheet" class="qrgrid"></div><h2 style="margin-top:18px">Registered Teams</h2><div id="adminStats" class="small"></div><div class="tablewrap"><table><thead><tr><th>Team Code</th><th>Team / Members</th><th>Score</th><th>Progress</th><th>Status</th></tr></thead><tbody id="teamsBody"></tbody></table></div></div></section>
 </section>
 <aside>
@@ -119,7 +149,7 @@ if(location.hash==='#admin'){$('adminCard').classList.remove('hidden');}
 function toggleSetup(){show('setup');$('setup').scrollIntoView({behavior:'smooth',block:'start'});}
 function saveApi(){API=$('apiUrl').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/.test(API)){ $('setupMsg').textContent='Valid deployed Apps Script /exec URL डालें।';return;}localStorage.setItem('mhq_api',API);$('setupMsg').textContent='Saved';$('setup').classList.add('hidden');refreshBoard();}
 function api(action,params={}){return new Promise((resolve,reject)=>{if(!API){reject(new Error('पहले Apps Script URL सेट करें।'));return;}const cb='mhqcb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');const q=new URLSearchParams({api:'1',action,callback:cb,...params});let timer=setTimeout(()=>{cleanup();reject(new Error('Server timeout. URL/deployment जाँचें।'));},20000);function cleanup(){clearTimeout(timer);delete window[cb];s.remove();}window[cb]=(data)=>{cleanup();resolve(data);};s.onerror=()=>{cleanup();reject(new Error('Backend नहीं खुला। Web App URL और deployment access जाँचें।'));};s.src=API+'?'+q.toString();document.body.appendChild(s);});}
-function show(id){$(id).classList.remove('hidden')}function hide(id){$(id).classList.add('hidden')}
+function show(id){const el=$(id);el.classList.remove('hidden');el.style.animation='none';void el.offsetWidth;el.style.animation='riseIn .35s cubic-bezier(.2,.7,.2,1) both';}function hide(id){$(id).classList.add('hidden');}
 async function loginTeam(){const c=$('teamCode').value.trim().toUpperCase();$('loginMsg').textContent='Checking…';try{const r=await api('login',{code:c});if(!r.ok)throw Error(r.message);CODE=r.team.code;localStorage.setItem('mhq_code',CODE);$('teamCode').value=CODE;showTeam(r.team);$('loginMsg').textContent='';}catch(e){$('loginMsg').textContent=e.message;}}
 function showTeam(t){current=t;hide('loginCard');show('teamGame');$('teamName').textContent=t.name;$('teamCodeLabel').textContent='Team Code: '+t.code;$('score').textContent=t.score;$('progress').textContent=t.completedCount+'/10';$('teamState').textContent=t.failed?'Eliminated':t.finished?'Completed':'Active';if(t.failed){showEnd('🔒 Team Eliminated','गलत उत्तर के कारण टीम का प्रयास समाप्त हो गया है।');hide('scannerCard');}else if(t.finished){showEnd('🏆 Quest Completed','आपने सभी 10 checkpoints पूरे कर लिए। कुल अंक: '+t.score);hide('scannerCard');}else{show('scannerCard');}}
 function showEnd(title,txt){show('endCard');$('endTitle').textContent=title;$('endText').textContent=txt;}
