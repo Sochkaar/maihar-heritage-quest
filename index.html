@@ -192,6 +192,61 @@ body:has(#adminPanel:not(.hidden)) #qrSheet .qrcard{border-radius:14px;border:1p
 @media(min-width:1350px){body:has(#adminPanel:not(.hidden)) #adminPanel{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child,body:has(#adminPanel:not(.hidden)) #adminPanel>h2:first-of-type,body:has(#adminPanel:not(.hidden)) #adminPanel>#adminStats,body:has(#adminPanel:not(.hidden)) #adminPanel>#teamSearchRow,body:has(#adminPanel:not(.hidden)) #adminPanel>.tablewrap,body:has(#adminPanel:not(.hidden)) #adminPanel>#createdTeam,body:has(#adminPanel:not(.hidden)) #adminPanel>#qrSheet{grid-column:1/-1}body:has(#adminPanel:not(.hidden)) #adminPanel>#liveMap{grid-column:1/-1}}
 @media(max-width:800px){body:has(#adminPanel:not(.hidden)) header .top-actions{position:static;margin-top:12px}body:has(#adminPanel:not(.hidden)) #adminStats{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{min-height:88px;padding:13px}.kpi strong{font-size:1.5rem}}
 
+
+/* PLAYFUL QUEST UI — colorful, friendly, polished admin workspace */
+:root{--play-mint:#d9f99d;--play-lilac:#eee7ff;--play-coral:#ffe1d7;--play-sky:#dff4ff;--play-ink:#182b23;--play-line:#e6e9e3}
+body:has(#adminPanel:not(.hidden)){background:radial-gradient(ellipse at 5% 0%,#e7f8d9 0,transparent 26rem),radial-gradient(ellipse at 95% 10%,#f2e8ff 0,transparent 25rem),#f6f8f4;color:var(--play-ink)}
+body:has(#adminPanel:not(.hidden)) header{background:linear-gradient(115deg,#143c2c 0%,#20684a 60%,#41835c 100%);position:relative;isolation:isolate;overflow:hidden;padding:25px 24px 23px}
+body:has(#adminPanel:not(.hidden)) header:after{content:'✦';display:grid;place-items:center;color:#e5f7b9;font-size:95px;right:9%;top:-17px;width:130px;height:130px;border:0;border-radius:50%;background:rgba(255,255,255,.07);box-shadow:0 0 0 20px rgba(255,255,255,.035),0 0 0 43px rgba(255,255,255,.025);animation:questFloat 5s ease-in-out infinite;z-index:-1}
+@keyframes questFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(7px) rotate(8deg)}}
+body:has(#adminPanel:not(.hidden)) header .tag{border:1px solid #ffffff35;background:#ffffff16;color:#eaffcb;border-radius:999px;padding:5px 11px;display:inline-flex;letter-spacing:.12em;font-size:.7rem}
+body:has(#adminPanel:not(.hidden)) header h1{letter-spacing:-.045em;font-size:clamp(2rem,3.3vw,2.8rem);text-shadow:0 2px 14px #102d2240}
+body:has(#adminPanel:not(.hidden)) header p{max-width:700px;font-size:.98rem;color:#e1f0e4}
+body:has(#adminPanel:not(.hidden)) .header-link{border:1px solid #ffffff42;background:#ffffff14;backdrop-filter:blur(8px);border-radius:999px;transition:transform .2s,background .2s}
+body:has(#adminPanel:not(.hidden)) .header-link:hover{background:#ffffff28;transform:translateY(-2px)}
+body:has(#adminPanel:not(.hidden)) main.wrap{padding-top:25px}
+body:has(#adminPanel:not(.hidden)) #adminPanel{gap:17px}
+body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child{border:1px solid #e3eadf;border-radius:18px;background:#ffffffdc;backdrop-filter:blur(10px);padding:12px 15px;box-shadow:0 10px 28px #25452d0a}
+body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child:before{content:'🧭 QUEST CONTROL';font-size:.72rem;letter-spacing:.1em;font-weight:900;color:#467052}
+body:has(#adminPanel:not(.hidden)) #adminPanel h2{display:flex;align-items:center;gap:8px;font-size:1.08rem;font-weight:850;letter-spacing:-.025em;margin:12px 0 2px;color:#20392b}
+body:has(#adminPanel:not(.hidden)) #adminPanel h2:before{content:'';width:8px;height:8px;border-radius:3px;background:#a3d95d;box-shadow:0 0 0 4px #edf8df;flex-shrink:0}
+body:has(#adminPanel:not(.hidden)) #adminPanel>label.field{font-size:.83rem;font-weight:800;color:#516858;margin:5px 0 -7px}
+body:has(#adminPanel:not(.hidden)) #adminPanel>input{border-radius:14px;background:#fff;border:1px solid #dce8d9;box-shadow:0 2px 0 #edf2ea inset}
+body:has(#adminPanel:not(.hidden)) #adminPanel>input:focus{border-color:#83bd63;box-shadow:0 0 0 4px #dff4d5;outline:0}
+body:has(#adminPanel:not(.hidden)) #adminPanel button{border-radius:13px;font-weight:800;letter-spacing:-.01em;transition:transform .18s,box-shadow .18s,filter .18s}
+body:has(#adminPanel:not(.hidden)) #adminPanel button:hover{transform:translateY(-2px);box-shadow:0 7px 15px #193b291b;filter:saturate(1.08)}
+body:has(#adminPanel:not(.hidden)) #adminPanel button:not(.gold):not(.light){background:linear-gradient(135deg,#1c6041,#2d8152)}
+body:has(#adminPanel:not(.hidden)) #adminPanel .gold{background:linear-gradient(135deg,#d8f99d,#bce979);color:#23412b;border:1px solid #c9ed8b}
+body:has(#adminPanel:not(.hidden)) #adminPanel .light{background:#f1f6ed;color:#31543b;border:1px solid #e0ead9}
+body:has(#adminPanel:not(.hidden)) #adminStats{gap:14px;margin:3px 0 4px}
+body:has(#adminPanel:not(.hidden)) .kpi{border:1px solid #e6ebe2;border-radius:20px;padding:19px 20px;min-height:122px;box-shadow:0 8px 22px #25452d09;transition:transform .22s,box-shadow .22s}
+body:has(#adminPanel:not(.hidden)) .kpi:hover{transform:translateY(-4px) rotate(-.3deg);box-shadow:0 14px 28px #25452d13}
+body:has(#adminPanel:not(.hidden)) .kpi:after{width:94px;height:94px;right:-25px;top:-24px;background:#e5f7ce}
+body:has(#adminPanel:not(.hidden)) .kpi:nth-child(2):after{background:#e7e0ff}
+body:has(#adminPanel:not(.hidden)) .kpi:nth-child(3):after{background:#d9f3ff}
+body:has(#adminPanel:not(.hidden)) .kpi:nth-child(4):after{background:#ffe4dc}
+body:has(#adminPanel:not(.hidden)) .kpi span{font-size:.82rem;color:#66776a;font-weight:800}
+body:has(#adminPanel:not(.hidden)) .kpi strong{font-size:2.15rem;letter-spacing:-.06em;color:#1d4a31}
+body:has(#adminPanel:not(.hidden)) .kpi small{font-size:.75rem;color:#849187}
+body:has(#adminPanel:not(.hidden)) #liveMap{border:5px solid white;border-radius:22px;box-shadow:0 12px 32px #203b2a10}
+body:has(#adminPanel:not(.hidden)) .tracking-box{border-radius:17px;background:linear-gradient(135deg,#fff,#f7fbf4);border:1px solid #e3ecde}
+body:has(#adminPanel:not(.hidden)) .tracking-item{border:1px solid #e6ede2;border-radius:14px;box-shadow:0 3px 12px #203b2a05;transition:transform .16s}
+body:has(#adminPanel:not(.hidden)) .tracking-item:hover{transform:translateX(3px)}
+body:has(#adminPanel:not(.hidden)) #teamSearchRow{background:#fff;border:1px solid #e5ece2;border-radius:16px;padding:11px 13px;margin:12px 0}
+body:has(#adminPanel:not(.hidden)) #teamSearch{border-radius:12px;background:#f9fbf7;max-width:470px}
+body:has(#adminPanel:not(.hidden)) #teamCountLabel{background:#edf7e4;color:#3d6845;border-radius:999px;padding:7px 11px;font-weight:800}
+body:has(#adminPanel:not(.hidden)) .tablewrap{border:1px solid #e3eae0;border-radius:18px;box-shadow:0 9px 26px #203b2a08;overflow:auto}
+body:has(#adminPanel:not(.hidden)) table{min-width:690px}
+body:has(#adminPanel:not(.hidden)) th{background:#eff7e9;color:#52705a;font-size:.72rem;letter-spacing:.075em}
+body:has(#adminPanel:not(.hidden)) tbody tr:nth-child(even){background:#fcfdfb}
+body:has(#adminPanel:not(.hidden)) tbody tr:hover{background:#f0f9e8}
+body:has(#adminPanel:not(.hidden)) #qrSheet .qrcard{border:1px solid #e2eadb;border-radius:18px;box-shadow:0 7px 18px #203b2a09;transition:transform .2s}
+body:has(#adminPanel:not(.hidden)) #qrSheet .qrcard:hover{transform:translateY(-3px)}
+body:has(#adminPanel:not(.hidden)) #createdTeam{border-radius:15px}
+@media(min-width:1350px){body:has(#adminPanel:not(.hidden)) #adminPanel{grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:19px}body:has(#adminPanel:not(.hidden)) #adminPanel>#liveMap{grid-column:1/-1}body:has(#adminPanel:not(.hidden)) #adminPanel>#trackingList{grid-column:1/-1}body:has(#adminPanel:not(.hidden)) #adminPanel>.tablewrap{grid-column:1/-1}}
+@media(max-width:800px){body:has(#adminPanel:not(.hidden)) header{padding:20px 16px}body:has(#adminPanel:not(.hidden)) header:after{right:-50px;opacity:.55}body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child:before{width:100%;margin-bottom:4px}body:has(#adminPanel:not(.hidden)) #adminStats{gap:9px}body:has(#adminPanel:not(.hidden)) .kpi{border-radius:16px;min-height:100px}body:has(#adminPanel:not(.hidden)) .kpi strong{font-size:1.75rem}}
+@media(prefers-reduced-motion:reduce){body:has(#adminPanel:not(.hidden)) header:after{animation:none}body:has(#adminPanel:not(.hidden)) .kpi,body:has(#adminPanel:not(.hidden)) #adminPanel button{transition:none}}
+
 </style></head><body>
 <header><div class="wrap"><div class="tag">MAIHAR • HERITAGE • QUEST</div><h1>Maihar Heritage Quest</h1><p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें। इतिहास, संस्कृति और रोमांच की एक डिजिटल यात्रा।</p><div class="top-actions"><a href="#admin" class="header-link">Admin Dashboard ↗</a><a href="#boardCard" class="header-link">🏆 Leaderboard</a></div></div></header>
 <main class="wrap">
