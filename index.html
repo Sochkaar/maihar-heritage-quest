@@ -125,6 +125,29 @@ td,th{padding:10px 9px}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 
+
+/* Desktop-first admin workspace */
+@media(min-width:1000px){
+ body:has(#adminPanel:not(.hidden)) .wrap{max-width:1440px}
+ body:has(#adminPanel:not(.hidden)) main>.grid{grid-template-columns:minmax(0,1fr)}
+ body:has(#adminPanel:not(.hidden)) #adminCard{padding:26px}
+ body:has(#adminPanel:not(.hidden)) #adminPanel{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+ body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child{position:sticky;top:0;z-index:20;background:var(--paper);padding:10px;border-bottom:1px solid var(--line)}
+ body:has(#adminPanel:not(.hidden)) #liveMap{height:520px}
+ body:has(#adminPanel:not(.hidden)) .tablewrap{max-height:480px;overflow:auto}
+ body:has(#adminPanel:not(.hidden)) #qrSheet{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:1350px){
+ body:has(#adminPanel:not(.hidden)) #adminPanel{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ body:has(#adminPanel:not(.hidden)) #adminPanel>.actions:first-child,
+ body:has(#adminPanel:not(.hidden)) #adminPanel>h2:first-of-type{grid-column:1/-1}
+ body:has(#adminPanel:not(.hidden)) #liveMap{height:560px}
+ body:has(#adminPanel:not(.hidden)) #qrSheet{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+#dashboardAutoToggle,#autoRefreshToggle{accent-color:var(--green);width:18px!important;height:18px}
+.qrcard{background:#fff;padding:18px;border:1px solid #cfcfcf}
+.qrcard img{width:min(100%,300px);image-rendering:pixelated}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style></head><body>
 <header><div class="wrap"><div class="tag">MAIHAR • HERITAGE • QUEST</div><h1>Maihar Heritage Quest</h1><p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें। इतिहास, संस्कृति और रोमांच की एक डिजिटल यात्रा।</p><div class="top-actions"><a href="#admin" class="header-link">Admin Dashboard ↗</a><a href="#boardCard" class="header-link">🏆 Leaderboard</a></div></div></header>
 <main class="wrap">
@@ -140,13 +163,14 @@ td,th{padding:10px 9px}
 <div id="endCard" class="card hidden"><h2 id="endTitle"></h2><p id="endText"></p></div>
 </section>
 <section id="adminCard" class="card hidden role-card admin-role"><div class="tag">ORGANIZER / ADMIN AREA</div><h2 style="margin-top:10px">🔐 Admin Dashboard</h2><p class="small">यह हिस्सा केवल event administrator के लिए है। यहाँ teams register करें, progress देखें और QR/report manage करें। Participants को यह administrative controls दिखाई नहीं देंगे।</p><div id="adminLogin"><label class="field">Admin PIN</label><input id="adminPin" type="password" placeholder="Admin PIN"><div class="actions"><button onclick="adminLogin()">Admin खोलें</button></div><div id="adminMsg" class="small"></div></div>
-<div id="adminPanel" class="hidden"><div class="actions" style="margin:0 0 16px"><button class="header-settings" type="button" onclick="toggleSetup()">⚙ Backend settings</button><button class="light" type="button" onclick="adminLogout()">Admin Logout</button></div><h2>नई Team Register करें</h2><label class="field">Team Name *</label><input id="newName" placeholder="जैसे Team Vindhya"><label class="field">सदस्यों के नाम</label><input id="newMembers" placeholder="सदस्य 1, सदस्य 2"><label class="field">Mobile (optional)</label><input id="newMobile" inputmode="tel" placeholder="मोबाइल नंबर"><div class="actions"><button onclick="registerTeam()">Team Register करें + Code बनाएं</button><button class="light" onclick="refreshAdmin()">Refresh dashboard</button><button class="light" onclick="downloadCsv()">CSV Export</button><button class="light" onclick="makeQrSheet()">Checkpoint QR Sheet</button><button class="light" onclick="window.print()">Print</button></div><div id="createdTeam" class="notice hidden"></div><div id="qrSheet" class="qrgrid"></div><h2 style="margin-top:22px">📍 Live Team Tracking</h2><p class="small">केवल वे teams दिखेंगी जिन्होंने location sharing की अनुमति दी है। Map हर 20 seconds में refresh होगा; last update भी दिखेगा।</p><div class="actions"><button class="gold" onclick="refreshLiveLocations()">Refresh locations</button><span id="trackingAdminStatus" class="small">Map शुरू हो रहा है…</span></div><div id="liveMap" aria-label="Live team locations map"></div><div id="trackingList" class="tracking-list"></div><h2 style="margin-top:18px">Registered Teams</h2><div id="adminStats" class="small"></div><div class="tablewrap"><table><thead><tr><th>Team Code</th><th>Team / Members</th><th>Score</th><th>Progress</th><th>Status</th></tr></thead><tbody id="teamsBody"></tbody></table></div></div></section>
+<div id="adminPanel" class="hidden"><div class="actions" style="margin:0 0 16px"><button class="header-settings" type="button" onclick="toggleSetup()">⚙ Backend settings</button><button class="light" type="button" onclick="adminLogout()">Admin Logout</button></div><h2>नई Team Register करें</h2><label class="field">Team Name *</label><input id="newName" placeholder="जैसे Team Vindhya"><label class="field">सदस्यों के नाम</label><input id="newMembers" placeholder="सदस्य 1, सदस्य 2"><label class="field">Mobile (optional)</label><input id="newMobile" inputmode="tel" placeholder="मोबाइल नंबर"><div class="actions"><button onclick="registerTeam()">Team Register करें + Code बनाएं</button><button class="light" onclick="refreshAdmin()">Refresh dashboard</button><button class="light" onclick="downloadCsv()">CSV Export</button><button class="light" onclick="makeQrSheet()">Preview QR Sheet</button><button class="gold" onclick="downloadAllQrs()">Download all QR (ZIP)</button><button class="light" onclick="window.print()">Print</button></div><div id="createdTeam" class="notice hidden"></div><div id="qrSheet" class="qrgrid"></div><h2 style="margin-top:22px">📍 Live Team Tracking</h2><p class="small">केवल वे teams दिखेंगी जिन्होंने location sharing की अनुमति दी है। Map हर 20 seconds में refresh होगा; last update भी दिखेगा।</p><div class="actions"><button class="gold" onclick="refreshLiveLocations()">Refresh now</button><label class="small" style="display:flex;align-items:center;gap:7px"><input id="autoRefreshToggle" type="checkbox" checked style="width:auto"> Auto-refresh (20 sec)</label><span id="trackingAdminStatus" class="small">Map शुरू हो रहा है…</span></div><div id="liveMap" aria-label="Live team locations map"></div><div id="trackingList" class="tracking-list"></div><h2 style="margin-top:18px">Registered Teams</h2><div class="actions"><label class="small" style="display:flex;align-items:center;gap:7px"><input id="dashboardAutoToggle" type="checkbox" checked style="width:auto"> Dashboard auto-refresh (30 sec)</label><span id="dashboardUpdated" class="small">Not refreshed yet</span></div><div id="adminStats" class="small"></div><div class="tablewrap"><table><thead><tr><th>Team Code</th><th>Team / Members</th><th>Score</th><th>Progress</th><th>Status</th></tr></thead><tbody id="teamsBody"></tbody></table></div></div></section>
 </section>
 <aside>
 <section id="boardCard" class="card"><h2>🏆 Leaderboard</h2><div id="board" class="small">Backend URL सेव करें।</div><button class="light" onclick="refreshBoard()">Refresh leaderboard</button></section>
 <section class="card"><h2>📜 नियम</h2><p class="small">1. Team Code Admin देता है।<br>2. Clue केवल सही क्रम के checkpoint QR scan पर खुलेगा।<br>3. सही उत्तर: +100 points।<br>4. गलत उत्तर: तत्काल elimination; दोबारा प्रयास नहीं।<br>5. सभी 10 checkpoints पूरे करने पर गेम पूरा।</p><p class="small">सभी checkpoints पर QR लगाने से पहले स्थल की अनुमति और सुरक्षित पहुँच सुनिश्चित करें।</p></section>
 </aside></div></main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 let API=localStorage.getItem('mhq_api')||'', CODE=localStorage.getItem('mhq_code')||'', PIN='', scanner=null, current=null, token='', busy=false, adminRows=[];
 let gpsWatch=null, gpsTimer=null, lastPosition=null, trackingEnabled=false, liveMap=null, liveMarkers={}, liveRefreshTimer=null;
@@ -163,16 +187,48 @@ function showEnd(title,txt){show('endCard');$('endTitle').textContent=title;$('e
 async function startScanner(){if(!CODE){alert('पहले Team Code से login करें।');return;}if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){$('scanMsg').textContent='Camera के लिए इस पेज को HTTPS पर खोलें और browser permission दें।';return;}if(!window.Html5Qrcode){$('scanMsg').textContent='Scanner library लोड नहीं हुई; internet चालू करके refresh करें।';return;}stopScanner();scanner=new Html5Qrcode('reader');$('scanMsg').textContent='Camera शुरू हो रहा है…';try{await scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:230,height:230}},onDecoded,()=>{});$('scanMsg').textContent='Checkpoint QR को कैमरे के सामने रखें।';}catch(e){$('scanMsg').textContent='Camera नहीं खुला: browser settings में Camera permission Allow करें। '+e.message;scanner=null;}}
 function stopScanner(){if(scanner){const s=scanner;scanner=null;s.stop().catch(()=>{}).finally(()=>s.clear().catch(()=>{}));}}
 async function onDecoded(raw){if(busy)return;busy=true;stopScanner();$('scanMsg').textContent='QR सत्यापित हो रहा है…';const a=String(raw).trim().split('|');if(a.length!==3||a[0]!=='MAIHARQUEST'){busy=false;$('scanMsg').textContent='यह Maihar Heritage Quest QR नहीं है।';return;}try{const r=await api('checkpoint',{code:CODE,stop:a[1],token:a[2]});if(!r.ok){if(r.gameOver){showEnd('Eliminated',r.message);hide('scannerCard');}else $('scanMsg').textContent=r.message;busy=false;return;}token=a[2];showClue(r);}catch(e){$('scanMsg').textContent=e.message;}busy=false;}
-function showClue(r){hide('scannerCard');show('clueCard');hide('mapActions');hide('answerMsg');$('stopTag').textContent='CHECKPOINT '+r.stop+' / '+r.total+' • '+r.name;$('clueText').textContent=r.clue;$('options').innerHTML='';r.options.forEach((o,i)=>{const l=document.createElement('label');l.className='option';const inp=document.createElement('input');inp.type='radio';inp.name='answer';inp.value=o;const span=document.createElement('span');span.textContent=String.fromCharCode(65+i)+'. '+o;l.append(inp,span);$('options').append(l);});$('submitBtn').disabled=false;}
+function showClue(r){hide('scannerCard');show('clueCard');hide('mapActions');hide('answerMsg');$('stopTag').textContent='CHECKPOINT '+r.stop+' / '+r.total;$('clueText').textContent=r.clue;$('options').innerHTML='';r.options.forEach((o,i)=>{const l=document.createElement('label');l.className='option';const inp=document.createElement('input');inp.type='radio';inp.name='answer';inp.value=o;const span=document.createElement('span');span.textContent=String.fromCharCode(65+i)+'. '+o;l.append(inp,span);$('options').append(l);});$('submitBtn').disabled=false;}
 $('answerForm').addEventListener('submit',async ev=>{ev.preventDefault();const chosen=document.querySelector('input[name=answer]:checked');if(!chosen){$('answerMsg').textContent='पहले एक विकल्प चुनें।';show('answerMsg');return;}if(busy)return;busy=true;$('submitBtn').disabled=true;try{const stop=Number(($('stopTag').textContent.match(/CHECKPOINT (\d+)/)||[])[1]);const r=await api('answer',{code:CODE,stop,token,answer:chosen.value});if(!r.ok){$('answerMsg').textContent=r.message;show('answerMsg');$('submitBtn').disabled=false;busy=false;return;}show('answerMsg');if(r.wrong){$('answerMsg').className='notice bad';$('answerMsg').textContent=r.message;hide('scannerCard');showEnd('🔒 Team Eliminated',r.message);$('teamState').textContent='Eliminated';refreshBoard();}else{$('answerMsg').className='notice good';$('answerMsg').textContent='सही उत्तर! +100 अंक। कुल अंक: '+r.score;$('score').textContent=r.score;$('progress').textContent=r.completed+'/10';$('mapLink').href=r.mapUrl;show('mapActions');if(r.final){$('teamState').textContent='Completed';showEnd('🏆 Quest Completed','सभी 10 checkpoints पूरे। कुल अंक: '+r.score);hide('scannerCard');}refreshBoard();}}catch(e){$('answerMsg').textContent=e.message;show('answerMsg');$('submitBtn').disabled=false;}busy=false;});
 async function refreshBoard(){try{const r=await api('leaderboard');if(!r.ok)throw Error(r.message);$('board').innerHTML='';if(!r.rows.length){$('board').textContent='अभी कोई registered team नहीं।';return;}r.rows.forEach((t,i)=>{const d=document.createElement('div');d.className='row';const rank=document.createElement('b');rank.textContent=i+1;const nm=document.createElement('span');nm.textContent=t.name+' · '+t.completedCount+'/10';const sc=document.createElement('b');sc.textContent=t.score+' pts';d.append(rank,nm,sc);$('board').append(d);});}catch(e){$('board').textContent=e.message;}}
 function openAdmin(){show('adminCard');location.hash='admin';}
-async function adminLogin(){PIN=$('adminPin').value;try{const r=await api('adminLogin',{pin:PIN});if(!r.ok)throw Error('Admin PIN गलत है।');hide('adminLogin');show('adminPanel');refreshAdmin();initLiveMap();refreshLiveLocations();startAdminLocationRefresh();}catch(e){$('adminMsg').textContent=e.message;}}
-function adminLogout(){PIN='';stopAdminLocationRefresh();hide('adminPanel');show('adminLogin');$('adminPin').value='';hide('setup');$('adminMsg').textContent='';}
+async function adminLogin(){PIN=$('adminPin').value;try{const r=await api('adminLogin',{pin:PIN});if(!r.ok)throw Error('Admin PIN गलत है।');hide('adminLogin');show('adminPanel');refreshAdmin();initLiveMap();refreshLiveLocations();startAdminLocationRefresh();startDashboardRefresh();}catch(e){$('adminMsg').textContent=e.message;}}
+function adminLogout(){PIN='';stopAdminLocationRefresh();if(window._mhqDashTimer){clearInterval(window._mhqDashTimer);window._mhqDashTimer=null;}hide('adminPanel');show('adminLogin');$('adminPin').value='';hide('setup');$('adminMsg').textContent='';}
 async function registerTeam(){const name=$('newName').value.trim();if(!name){alert('Team Name भरें।');return;}try{const r=await api('registerTeam',{pin:PIN,name,members:$('newMembers').value,mobile:$('newMobile').value});if(!r.ok)throw Error(r.message);const t=r.team;$('createdTeam').innerHTML='';const strong=document.createElement('b');strong.textContent='Registration सफल — '+t.name;const p=document.createElement('p');p.textContent='Team Code: '+t.code+' (टीम को यह code दें)';const b=document.createElement('button');b.textContent='Copy Team Code';b.onclick=()=>navigator.clipboard.writeText(t.code);$('createdTeam').append(strong,p,b);show('createdTeam');$('newName').value='';$('newMembers').value='';$('newMobile').value='';refreshAdmin();refreshBoard();}catch(e){alert(e.message);}}
-async function refreshAdmin(){try{const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message);adminRows=r.teams;$('teamsBody').innerHTML='';let active=0,elim=0,done=0;adminRows.forEach(t=>{if(t.failed)elim++;else if(t.finished)done++;else active++;const tr=document.createElement('tr');[t.code,t.name+(t.members?' — '+t.members:''),t.score,t.completedCount+'/10',t.failed?'Eliminated':t.finished?'Completed':'Active'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});$('teamsBody').append(tr);});$('adminStats').textContent='Total: '+adminRows.length+' | Active: '+active+' | Eliminated: '+elim+' | Completed: '+done;}catch(e){$('adminMsg').textContent=e.message;}}
+async function refreshAdmin(){try{const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message);adminRows=r.teams;$('dashboardUpdated').textContent='Last updated: '+new Date().toLocaleTimeString();$('teamsBody').innerHTML='';let active=0,elim=0,done=0;adminRows.forEach(t=>{if(t.failed)elim++;else if(t.finished)done++;else active++;const tr=document.createElement('tr');[t.code,t.name+(t.members?' — '+t.members:''),t.score,t.completedCount+'/10',t.failed?'Eliminated':t.finished?'Completed':'Active'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});$('teamsBody').append(tr);});$('adminStats').textContent='Total: '+adminRows.length+' | Active: '+active+' | Eliminated: '+elim+' | Completed: '+done;}catch(e){$('adminMsg').textContent=e.message;}}
 function downloadCsv(){const rows=[['Team Code','Team Name','Members','Mobile','Score','Completed checkpoints','Next checkpoint','Status','Attempts'],...adminRows.map(t=>[t.code,t.name,t.members,t.mobile,t.score,t.completedCount,t.nextStop,t.failed?'Eliminated':t.finished?'Completed':'Active',t.attempts])];const csv='\\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download='Maihar_Heritage_Quest_Teams.csv';a.click();URL.revokeObjectURL(a.href);}
 async function makeQrSheet(){try{const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message);$('qrSheet').innerHTML='';r.checkpoints.forEach(cp=>{const d=document.createElement('div');d.className='qrcard';const b=document.createElement('b');b.textContent='Checkpoint '+cp.stop+' — '+cp.name;const img=document.createElement('img');img.alt='Checkpoint QR '+cp.stop;img.src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(cp.payload);const note=document.createElement('div');note.className='small';note.textContent='केवल game page के scanner से scan करें';d.append(b,img,note);$('qrSheet').append(d);});}catch(e){alert(e.message);}}
+
+async function downloadAllQrs(){
+ try{
+  if(!window.JSZip)throw Error('ZIP library load नहीं हुई। Internet चालू करके फिर कोशिश करें।');
+  const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message||'Admin authorization required');
+  const zip=new JSZip();const folder=zip.folder('Maihar_Heritage_Quest_Checkpoint_QR');
+  const manifest=[['Checkpoint Number','Checkpoint Name','QR Payload'].join(',')];
+  for(const cp of r.checkpoints){
+    const payload=cp.payload;
+    const url='https://api.qrserver.com/v1/create-qr-code/?size=1200x1200&ecc=H&margin=4&data='+encodeURIComponent(payload);
+    const response=await fetch(url);if(!response.ok)throw Error('Checkpoint '+cp.stop+' ka QR download nahi hua.');
+    const blob=await response.blob();
+    const bitmap=await createImageBitmap(blob);
+    const canvas=document.createElement('canvas');canvas.width=1300;canvas.height=1420;
+    const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#123b2b';ctx.textAlign='center';ctx.font='bold 42px Arial, sans-serif';
+    ctx.fillText('CHECKPOINT '+String(cp.stop).padStart(2,'0')+' / '+r.checkpoints.length,650,62);
+    ctx.font='bold 38px "Noto Sans Devanagari", Arial, sans-serif';
+    const label=String(cp.name);ctx.fillText(label.length>30?label.slice(0,30):label,650,112);
+    ctx.drawImage(bitmap,50,145,1200,1200);bitmap.close();
+    const labeledBlob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+    if(!labeledBlob)throw Error('Labeled QR image create nahi hua.');
+    folder.file('Checkpoint_'+String(cp.stop).padStart(2,'0')+'_'+safeFileName(cp.name)+'.png',await labeledBlob.arrayBuffer());
+    manifest.push([cp.stop,'"'+String(cp.name).replace(/"/g,'""')+'"','"'+payload+'"'].join(','));
+  }
+  folder.file('Checkpoint_Index.csv','\ufeff'+manifest.join('\r\n'));
+  const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+  const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download='Maihar_Heritage_Quest_All_Checkpoint_QR.zip';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
+ }catch(e){alert('QR ZIP बन नहीं पाया: '+e.message);}
+}
+function safeFileName(v){return String(v||'checkpoint').replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_');}
+
 if(location.hash==='#admin')show('adminCard');
 if(CODE){$('teamCode').value=CODE;}
 
@@ -209,7 +265,11 @@ function initLiveMap(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(liveMap);
   setTimeout(()=>liveMap.invalidateSize(),250);
 }
-function startAdminLocationRefresh(){stopAdminLocationRefresh();liveRefreshTimer=setInterval(()=>{if(PIN&&!$('adminPanel').classList.contains('hidden'))refreshLiveLocations();},20000);}
+function startAdminLocationRefresh(){stopAdminLocationRefresh();if($('autoRefreshToggle')&&!$('autoRefreshToggle').checked)return;liveRefreshTimer=setInterval(()=>{if(PIN&&!$('adminPanel').classList.contains('hidden'))refreshLiveLocations();},20000);}
+function setAutoRefresh(){if($('autoRefreshToggle')&&$('autoRefreshToggle').checked)startAdminLocationRefresh();else stopAdminLocationRefresh();}
+function startDashboardRefresh(){if(window._mhqDashTimer)clearInterval(window._mhqDashTimer);if(!$('dashboardAutoToggle')||!$('dashboardAutoToggle').checked)return;window._mhqDashTimer=setInterval(()=>{if(PIN&&!$('adminPanel').classList.contains('hidden')){refreshAdmin();refreshBoard();}},30000);}
+if($('autoRefreshToggle'))$('autoRefreshToggle').addEventListener('change',setAutoRefresh);
+if($('dashboardAutoToggle'))$('dashboardAutoToggle').addEventListener('change',startDashboardRefresh);
 function stopAdminLocationRefresh(){if(liveRefreshTimer){clearInterval(liveRefreshTimer);liveRefreshTimer=null;}}
 async function refreshLiveLocations(){
   if(!PIN)return;
