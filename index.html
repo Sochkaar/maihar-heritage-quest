@@ -1,53 +1,661 @@
 <!doctype html>
-<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173b2b"><title>Maihar Heritage Quest</title>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b2b">
+<meta name="description" content="Maihar Heritage Quest — QR-based heritage treasure hunt.">
+<title>Maihar Heritage Quest</title>
 <style>
-:root{--green:#173b2b;--green2:#2b674b;--gold:#e8bd61;--cream:#f6f0e2;--paper:#fffdf7;--ink:#1f2b23;--muted:#66756b;--line:#e3dac7}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 system-ui,"Noto Sans Devanagari",Arial,sans-serif}header{background:linear-gradient(135deg,var(--green),var(--green2));color:white;padding:25px 16px;border-bottom:5px solid var(--gold)}.wrap{max-width:980px;margin:auto}h1{margin:5px 0;font-size:clamp(1.7rem,5vw,2.5rem)}header p{margin:5px 0;color:#e0eadf}main{padding:16px 12px 45px}.grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:14px}.card{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:17px;margin-bottom:13px;box-shadow:0 5px 16px #44351a0a}.hidden{display:none!important}h2{margin:0 0 12px;font-size:1.2rem}.field{display:block;font-weight:700;margin:12px 0 5px}input,textarea{width:100%;padding:12px;border:1px solid #cfc5b2;border-radius:10px;font:inherit;background:white}button,.button{border:0;border-radius:11px;padding:12px 15px;background:var(--green);color:white;font:inherit;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:44px}button.gold{background:var(--gold);color:var(--green)}button.light{background:#e8eee7;color:var(--green)}button:disabled{opacity:.55}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.small{font-size:.9rem;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.stat{text-align:center;background:#f4f0e5;border-radius:12px;padding:10px}.stat b{display:block;font-size:1.3rem;color:var(--green)}#reader{width:100%;max-width:440px;margin:12px auto} .option{display:flex;gap:10px;border:1px solid var(--line);border-radius:11px;padding:12px;margin:8px 0;cursor:pointer}.option input{width:auto;margin-top:5px;accent-color:var(--green)}.notice{padding:11px;border-radius:10px;background:#edf2eb;margin:10px 0}.bad{background:#f9e6e2!important;color:#842d23}.good{background:#e2f3e5!important;color:#205d31}.row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);align-items:center}.qrgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.qrcard{border:1px dashed #b8ad97;padding:10px;text-align:center;border-radius:10px;break-inside:avoid}.qrcard img{width:min(100%,210px);display:block;margin:8px auto}.tag{display:inline-block;background:#e6eee5;color:var(--green);padding:3px 8px;border-radius:99px;font-size:.8rem;font-weight:700}.status{font-weight:700}.admin-only{display:none}table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;border-bottom:1px solid var(--line);padding:8px 5px;vertical-align:top}th{background:#f3eedf}.tablewrap{overflow:auto}@media(max-width:700px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.qrgrid{grid-template-columns:1fr 1fr}}@media print{header,.no-print,#setup,#loginCard,#teamGame,#boardCard{display:none!important}body{background:white}.card{box-shadow:none;border:0}.qrgrid{grid-template-columns:repeat(3,1fr)}}
-</style></head><body>
-<header><div class="wrap"><div class="tag">MAIHAR • HERITAGE • QUEST</div><h1>Maihar Heritage Quest</h1><p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें।</p><p><a href="#admin" style="color:#ffe5a0">Admin Dashboard ↗</a></p></div></header>
+:root {
+  --green:#123b2b; --green2:#236348; --gold:#e9bd62;
+  --cream:#f5f1e7; --paper:#fffefa; --ink:#17251d;
+  --muted:#627168; --line:#e2dac9;
+  --shadow:0 12px 34px rgba(31,48,35,.08);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:radial-gradient(circle at 8% 8%,rgba(233,189,98,.13),transparent 25rem),var(--cream);
+  color:var(--ink);
+  font:16px/1.55 system-ui,"Noto Sans Devanagari",Arial,sans-serif;
+}
+header {
+  position:relative; overflow:hidden;
+  padding:clamp(22px,4vw,38px) 18px 26px;
+  color:white;
+  background:linear-gradient(120deg,#102f23,#1d563d 62%,#2d704d);
+  border-bottom:4px solid var(--gold);
+}
+header:after {
+  content:""; position:absolute; right:-70px; top:-125px;
+  width:290px; height:290px;
+  border:1px solid rgba(255,255,255,.13); border-radius:50%;
+  box-shadow:0 0 0 22px rgba(255,255,255,.025),0 0 0 48px rgba(255,255,255,.02);
+  pointer-events:none;
+}
+header .wrap { position:relative; z-index:1; }
+.wrap { max-width:1120px; margin:auto; }
+header h1 {
+  font-weight:850; letter-spacing:-.035em; line-height:1.12;
+  margin:12px 0 9px; font-size:clamp(1.7rem,5vw,2.5rem);
+}
+header p { max-width:620px; margin:5px 0; color:#e0eadf; }
+.top-actions { display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-top:18px; }
+.header-link,.header-settings {
+  display:inline-flex; align-items:center; gap:7px;
+  border:1px solid rgba(255,255,255,.26); border-radius:999px;
+  padding:9px 14px; color:white; background:rgba(255,255,255,.08);
+  text-decoration:none; font:inherit; font-size:.9rem; font-weight:700; min-height:40px;
+}
+.header-settings { cursor:pointer; }
+main.wrap { padding:24px 16px 56px; }
+.grid {
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+  gap:18px; align-items:start;
+}
+.card {
+  background:var(--paper); border:1px solid rgba(201,187,158,.7);
+  border-radius:19px; padding:clamp(16px,2.3vw,24px);
+  box-shadow:var(--shadow); margin-bottom:16px;
+}
+.hidden { display:none!important; }
+h2 { margin:0 0 12px; font-size:1.18rem; letter-spacing:-.015em; }
+.field { display:block; font-weight:700; margin:12px 0 5px; }
+input,textarea {
+  width:100%; min-height:48px; border:1px solid #cfc6b5;
+  border-radius:12px; padding:12px 14px; font:inherit; background:white;
+  transition:border-color .18s,box-shadow .18s;
+}
+input:focus,textarea:focus {
+  outline:none; border-color:#347454; box-shadow:0 0 0 3px rgba(52,116,84,.14);
+}
+button,.button {
+  display:inline-flex; align-items:center; justify-content:center;
+  border:0; border-radius:12px; padding:12px 17px; min-height:46px;
+  background:var(--green); color:white; font:inherit; font-weight:750;
+  cursor:pointer; text-decoration:none;
+  transition:transform .12s,box-shadow .12s,background .12s;
+  box-shadow:0 2px 0 rgba(0,0,0,.04);
+}
+button:hover,.button:hover { transform:translateY(-1px); box-shadow:0 5px 13px rgba(20,45,30,.12); }
+button:focus-visible,.button:focus-visible,a:focus-visible { outline:3px solid #d9a941; outline-offset:3px; }
+button.gold { background:var(--gold); color:var(--green); }
+button.light { background:#edf2eb; color:var(--green); border:1px solid #dbe4d8; }
+button:disabled { opacity:.55; cursor:not-allowed; }
+.actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:12px; }
+.small { font-size:.9rem; color:var(--muted); line-height:1.55; }
+.tag {
+  display:inline-block; background:#e6eee5; color:var(--green);
+  padding:3px 8px; border-radius:99px; font-size:.8rem; font-weight:700; letter-spacing:.04em;
+}
+#setup { border-left:4px solid var(--gold); }
+#loginCard { background:linear-gradient(145deg,#fffefa,#f9f5e9); }
+#teamInfo { box-shadow:none; background:#f1f5ed; border-color:#dce6d8; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:12px; }
+.stat {
+  text-align:center; border:1px solid #e4dfd1;
+  background:linear-gradient(180deg,#fbf8ef,#f0ecdf);
+  padding:13px 8px; border-radius:15px;
+}
+.stat b { display:block; font-size:clamp(1.15rem,3vw,1.55rem); line-height:1.3; color:var(--green); }
+.stat span { font-size:.82rem; color:var(--muted); }
+#scannerCard { border-top:3px solid var(--green2); }
+#reader { width:100%; max-width:480px; min-height:0; margin:10px auto; border-radius:14px; overflow:hidden; }
+#reader video { max-height:52vh; border-radius:12px; object-fit:cover; }
+#scanMsg,#answerMsg { line-height:1.5; }
+.option {
+  display:flex; align-items:flex-start; gap:12px;
+  border:1px solid var(--line); border-radius:13px; padding:14px;
+  margin:8px 0; cursor:pointer; background:#fffefb;
+  transition:border-color .15s,background .15s;
+}
+.option:hover { border-color:#94b59b; background:#f7faf5; }
+.option:has(input:checked) {
+  border-color:#347454; background:#eef5ec;
+  box-shadow:inset 0 0 0 1px #347454;
+}
+.option input { width:19px; min-height:auto; height:19px; margin-top:3px; flex-shrink:0; accent-color:var(--green); }
+.option span { line-height:1.5; }
+.notice { padding:11px; border:1px solid #dbe5d8; border-radius:12px; background:#edf2eb; margin:10px 0; }
+.bad { background:#f9e6e2!important; color:#842d23; border-color:#efc8c1!important; }
+.good { background:#e2f3e5!important; color:#205d31; border-color:#b8d8bd!important; }
+#board .row {
+  display:grid; grid-template-columns:34px minmax(0,1fr) auto;
+  gap:8px; padding:11px 2px; border-bottom:1px solid var(--line); align-items:center;
+}
+#board .row:first-child { color:#815b0d; }
+#adminPanel { padding-top:8px; }
+#adminPanel h2 { margin-top:20px; }
+#adminPanel h2:first-child { margin-top:0; }
+#createdTeam { overflow-wrap:anywhere; }
+#qrSheet { margin-top:16px; }
+.qrgrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.qrcard {
+  border:1px dashed #b8ad97; padding:14px; text-align:center;
+  border-radius:10px; background:#fff; break-inside:avoid;
+}
+.qrcard img { width:min(100%,210px); display:block; margin:8px auto; }
+.tablewrap { overflow:auto; border:1px solid var(--line); border-radius:12px; margin-top:10px; }
+table { width:100%; min-width:620px; border-collapse:collapse; font-size:.9rem; }
+th,td { text-align:left; border-bottom:1px solid var(--line); padding:10px 9px; vertical-align:top; }
+th { position:sticky; top:0; background:#f3eedf; }
+#adminCard { scroll-margin-top:12px; }
+@media(min-width:900px) {
+  #clueCard { padding:clamp(20px,3vw,30px); }
+  #options { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #options .option { margin:0; }
+}
+@media(max-width:760px) {
+  main.wrap { padding:16px 11px 36px; }
+  .grid { grid-template-columns:1fr; gap:8px; }
+  header { padding:22px 15px; }
+  header h1 { font-size:clamp(1.7rem,8vw,2.3rem); }
+  .top-actions { gap:7px; }
+  .header-link,.header-settings { font-size:.83rem; padding:8px 11px; }
+  .card { border-radius:16px; padding:16px; margin-bottom:12px; }
+  .actions>* { flex:1 1 auto; }
+  .actions button,.actions .button { width:100%; }
+  .stats { gap:6px; }
+  .stat { padding:10px 4px; }
+  .stat span { font-size:.74rem; }
+  #boardCard { order:2; }
+  #adminCard .actions button { flex:1 1 145px; }
+  .qrgrid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .qrcard { padding:8px; font-size:.85rem; }
+  .qrcard img { width:100%; max-width:160px; }
+}
+@media(max-width:390px) {
+  .qrgrid { grid-template-columns:1fr 1fr; }
+  .stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .stat b { font-size:1.05rem; }
+  .header-link,.header-settings { font-size:.78rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after { scroll-behavior:auto!important; transition:none!important; }
+}
+@media print {
+  header,.no-print,#setup,#loginCard,#teamGame,#boardCard { display:none!important; }
+  body { background:white; }
+  .card { box-shadow:none; border:0; }
+  .qrgrid { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="tag">MAIHAR • HERITAGE • QUEST</div>
+    <h1>Maihar Heritage Quest</h1>
+    <p>मैहर की विरासत खोजें — हर checkpoint पर QR स्कैन करें।</p>
+    <div class="top-actions">
+      <a href="#admin" class="header-link">Admin Dashboard ↗</a>
+      <button class="header-settings" type="button" onclick="toggleSetup()">⚙ Backend settings</button>
+    </div>
+  </div>
+</header>
 <main class="wrap">
-<section id="setup" class="card"><h2>⚙️ One-time setup</h2><p class="small">पहले Apps Script backend deploy करें और नीचे उसका Web App URL डालें। URL इसी browser में सेव होगा।</p><label class="field">Apps Script Web App URL</label><input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec"><div class="actions"><button onclick="saveApi()">Save backend URL</button><span id="setupMsg" class="small"></span></div></section>
-<div class="grid"><section>
-<section id="loginCard" class="card"><h2>🎟️ Team Login</h2><p class="small">Team registration Admin Dashboard से होगा। Admin द्वारा दिया गया Team Code डालें।</p><label class="field">Team Code</label><input id="teamCode" placeholder="जैसे MHQ-AB12-XYZ" autocomplete="off"><div class="actions"><button onclick="loginTeam()">गेम शुरू करें →</button></div><div id="loginMsg" class="small"></div></section>
-<section id="teamGame" class="hidden">
-<div class="stats"><div class="stat"><b id="score">0</b><span>Points</span></div><div class="stat"><b id="progress">0/10</b><span>Checkpoints</span></div><div class="stat"><b id="teamState">Active</b><span>Status</span></div></div>
-<div id="teamInfo" class="card"><b id="teamName"></b><div class="small" id="teamCodeLabel"></div></div>
-<div id="scannerCard" class="card"><h2>📷 In-game QR Scanner</h2><p class="small">भौतिक checkpoint पर लगे QR को इसी पेज के कैमरे से स्कैन करें।</p><div id="reader"></div><div id="scanMsg" class="notice">कैमरा शुरू करने के लिए बटन दबाएँ।</div><div class="actions"><button onclick="startScanner()">स्कैनर खोलें</button><button class="light" onclick="stopScanner()">कैमरा बंद करें</button></div></div>
-<div id="clueCard" class="card hidden"><div class="tag" id="stopTag"></div><h2>🧩 आपका Clue</h2><p id="clueText"></p><form id="answerForm"><div id="options"></div><button id="submitBtn" type="submit">उत्तर जमा करें</button></form><div id="answerMsg" class="notice hidden"></div><div id="mapActions" class="actions hidden"><a id="mapLink" class="button gold" target="_blank" rel="noopener">Google Maps में अगला स्थान खोलें ↗</a><button class="light" onclick="startScanner()">अगला QR स्कैन करें</button></div></div>
-<div id="endCard" class="card hidden"><h2 id="endTitle"></h2><p id="endText"></p></div>
-</section>
-<section id="adminCard" class="card hidden"><h2>🔐 Admin Dashboard</h2><p class="small">Team registration, progress, QR sheet और report export.</p><div id="adminLogin"><label class="field">Admin PIN</label><input id="adminPin" type="password" placeholder="Admin PIN"><div class="actions"><button onclick="adminLogin()">Admin खोलें</button></div><div id="adminMsg" class="small"></div></div>
-<div id="adminPanel" class="hidden"><h2>नई Team Register करें</h2><label class="field">Team Name *</label><input id="newName" placeholder="जैसे Team Vindhya"><label class="field">सदस्यों के नाम</label><input id="newMembers" placeholder="सदस्य 1, सदस्य 2"><label class="field">Mobile (optional)</label><input id="newMobile" inputmode="tel" placeholder="मोबाइल नंबर"><div class="actions"><button onclick="registerTeam()">Team Register करें + Code बनाएं</button><button class="light" onclick="refreshAdmin()">Refresh dashboard</button><button class="light" onclick="downloadCsv()">CSV Export</button><button class="light" onclick="makeQrSheet()">Checkpoint QR Sheet</button><button class="light" onclick="window.print()">Print</button></div><div id="createdTeam" class="notice hidden"></div><div id="qrSheet" class="qrgrid"></div><h2 style="margin-top:18px">Registered Teams</h2><div id="adminStats" class="small"></div><div class="tablewrap"><table><thead><tr><th>Team Code</th><th>Team / Members</th><th>Score</th><th>Progress</th><th>Status</th></tr></thead><tbody id="teamsBody"></tbody></table></div></div></section>
-</section>
-<aside>
-<section id="boardCard" class="card"><h2>🏆 Leaderboard</h2><div id="board" class="small">Backend URL सेव करें।</div><button class="light" onclick="refreshBoard()">Refresh leaderboard</button></section>
-<section class="card"><h2>📜 नियम</h2><p class="small">1. Team Code Admin देता है।<br>2. Clue केवल सही क्रम के checkpoint QR scan पर खुलेगा।<br>3. सही उत्तर: +100 points।<br>4. गलत उत्तर: तत्काल elimination; दोबारा प्रयास नहीं।<br>5. सभी 10 checkpoints पूरे करने पर गेम पूरा।</p><p class="small">सभी checkpoints पर QR लगाने से पहले स्थल की अनुमति और सुरक्षित पहुँच सुनिश्चित करें।</p></section>
-</aside></div></main>
+  <section id="setup" class="card">
+    <h2>⚙️ One-time setup</h2>
+    <p class="small">पहले Apps Script backend deploy करें और नीचे उसका Web App URL डालें। URL इसी browser में सेव होगा।</p>
+    <label class="field" for="apiUrl">Apps Script Web App URL</label>
+    <input id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="actions">
+      <button onclick="saveApi()">Save backend URL</button>
+      <span id="setupMsg" class="small"></span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section>
+      <section id="loginCard" class="card">
+        <h2>🎟️ Team Login</h2>
+        <p class="small">Team registration Admin Dashboard से होगा। Admin द्वारा दिया गया Team Code डालें।</p>
+        <label class="field" for="teamCode">Team Code</label>
+        <input id="teamCode" placeholder="जैसे MHQ-AB12-XYZ" autocomplete="off">
+        <div class="actions"><button onclick="loginTeam()">गेम शुरू करें →</button></div>
+        <div id="loginMsg" class="small"></div>
+      </section>
+
+      <section id="teamGame" class="hidden">
+        <div class="stats">
+          <div class="stat"><b id="score">0</b><span>Points</span></div>
+          <div class="stat"><b id="progress">0/10</b><span>Checkpoints</span></div>
+          <div class="stat"><b id="teamState">Active</b><span>Status</span></div>
+        </div>
+        <div id="teamInfo" class="card">
+          <b id="teamName"></b>
+          <div class="small" id="teamCodeLabel"></div>
+        </div>
+        <div id="scannerCard" class="card">
+          <h2>📷 In-game QR Scanner</h2>
+          <p class="small">भौतिक checkpoint पर लगे QR को इसी पेज के कैमरे से स्कैन करें।</p>
+          <div id="reader"></div>
+          <div id="scanMsg" class="notice">कैमरा शुरू करने के लिए बटन दबाएँ।</div>
+          <div class="actions">
+            <button onclick="startScanner()">स्कैनर खोलें</button>
+            <button class="light" onclick="stopScanner()">कैमरा बंद करें</button>
+          </div>
+        </div>
+        <div id="clueCard" class="card hidden">
+          <div class="tag" id="stopTag"></div>
+          <h2>🧩 आपका Clue</h2>
+          <p id="clueText"></p>
+          <form id="answerForm">
+            <div id="options"></div>
+            <button id="submitBtn" type="submit">उत्तर जमा करें</button>
+          </form>
+          <div id="answerMsg" class="notice hidden"></div>
+          <div id="mapActions" class="actions hidden">
+            <a id="mapLink" class="button gold" target="_blank" rel="noopener">Google Maps में अगला स्थान खोलें ↗</a>
+            <button class="light" onclick="startScanner()">अगला QR स्कैन करें</button>
+          </div>
+        </div>
+        <div id="endCard" class="card hidden">
+          <h2 id="endTitle"></h2>
+          <p id="endText"></p>
+        </div>
+      </section>
+
+      <section id="adminCard" class="card hidden">
+        <h2>🔐 Admin Dashboard</h2>
+        <p class="small">Team registration, progress, QR sheet और report export.</p>
+        <div id="adminLogin">
+          <label class="field" for="adminPin">Admin PIN</label>
+          <input id="adminPin" type="password" placeholder="Admin PIN">
+          <div class="actions"><button onclick="adminLogin()">Admin खोलें</button></div>
+          <div id="adminMsg" class="small"></div>
+        </div>
+        <div id="adminPanel" class="hidden">
+          <h2>नई Team Register करें</h2>
+          <label class="field" for="newName">Team Name *</label>
+          <input id="newName" placeholder="जैसे Team Vindhya">
+          <label class="field" for="newMembers">सदस्यों के नाम</label>
+          <input id="newMembers" placeholder="सदस्य 1, सदस्य 2">
+          <label class="field" for="newMobile">Mobile (optional)</label>
+          <input id="newMobile" inputmode="tel" placeholder="मोबाइल नंबर">
+          <div class="actions">
+            <button onclick="registerTeam()">Team Register करें + Code बनाएं</button>
+            <button class="light" onclick="refreshAdmin()">Refresh dashboard</button>
+            <button class="light" onclick="downloadCsv()">CSV Export</button>
+            <button class="light" onclick="makeQrSheet()">Checkpoint QR Sheet</button>
+            <button class="light" onclick="window.print()">Print</button>
+          </div>
+          <div id="createdTeam" class="notice hidden"></div>
+          <div id="qrSheet" class="qrgrid"></div>
+          <h2 style="margin-top:18px">Registered Teams</h2>
+          <div id="adminStats" class="small"></div>
+          <div class="tablewrap">
+            <table>
+              <thead><tr><th>Team Code</th><th>Team / Members</th><th>Score</th><th>Progress</th><th>Status</th></tr></thead>
+              <tbody id="teamsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <aside>
+      <section id="boardCard" class="card">
+        <h2>🏆 Leaderboard</h2>
+        <div id="board" class="small">Backend URL सेव करें।</div>
+        <button class="light" onclick="refreshBoard()">Refresh leaderboard</button>
+      </section>
+      <section class="card">
+        <h2>📜 नियम</h2>
+        <p class="small">
+          1. Team Code Admin देता है।<br>
+          2. Clue केवल सही क्रम के checkpoint QR scan पर खुलेगा।<br>
+          3. सही उत्तर: +100 points।<br>
+          4. गलत उत्तर: तत्काल elimination; दोबारा प्रयास नहीं।<br>
+          5. सभी 10 checkpoints पूरे करने पर गेम पूरा।
+        </p>
+        <p class="small">सभी checkpoints पर QR लगाने से पहले स्थल की अनुमति और सुरक्षित पहुँच सुनिश्चित करें।</p>
+      </section>
+    </aside>
+  </div>
+</main>
+
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-let API=localStorage.getItem('mhq_api')||'', CODE=localStorage.getItem('mhq_code')||'', PIN='', scanner=null, current=null, token='', busy=false, adminRows=[];
+let API=localStorage.getItem('mhq_api')||'';
+let CODE=localStorage.getItem('mhq_code')||'';
+let PIN='', scanner=null, current=null, token='', busy=false, adminRows=[];
 const $=id=>document.getElementById(id);
-if(API){$('apiUrl').value=API;$('setup').classList.add('hidden');}
-if(location.hash==='#admin'){$('adminCard').classList.remove('hidden');}
-function saveApi(){API=$('apiUrl').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/.test(API)){ $('setupMsg').textContent='Valid deployed Apps Script /exec URL डालें।';return;}localStorage.setItem('mhq_api',API);$('setupMsg').textContent='Saved';$('setup').classList.add('hidden');refreshBoard();}
-function api(action,params={}){return new Promise((resolve,reject)=>{if(!API){reject(new Error('पहले Apps Script URL सेट करें।'));return;}const cb='mhqcb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');const q=new URLSearchParams({api:'1',action,callback:cb,...params});let timer=setTimeout(()=>{cleanup();reject(new Error('Server timeout. URL/deployment जाँचें।'));},20000);function cleanup(){clearTimeout(timer);delete window[cb];s.remove();}window[cb]=(data)=>{cleanup();resolve(data);};s.onerror=()=>{cleanup();reject(new Error('Backend नहीं खुला। Web App URL और deployment access जाँचें।'));};s.src=API+'?'+q.toString();document.body.appendChild(s);});}
-function show(id){$(id).classList.remove('hidden')}function hide(id){$(id).classList.add('hidden')}
-async function loginTeam(){const c=$('teamCode').value.trim().toUpperCase();$('loginMsg').textContent='Checking…';try{const r=await api('login',{code:c});if(!r.ok)throw Error(r.message);CODE=r.team.code;localStorage.setItem('mhq_code',CODE);$('teamCode').value=CODE;showTeam(r.team);$('loginMsg').textContent='';}catch(e){$('loginMsg').textContent=e.message;}}
-function showTeam(t){current=t;hide('loginCard');show('teamGame');$('teamName').textContent=t.name;$('teamCodeLabel').textContent='Team Code: '+t.code;$('score').textContent=t.score;$('progress').textContent=t.completedCount+'/10';$('teamState').textContent=t.failed?'Eliminated':t.finished?'Completed':'Active';if(t.failed){showEnd('🔒 Team Eliminated','गलत उत्तर के कारण टीम का प्रयास समाप्त हो गया है।');hide('scannerCard');}else if(t.finished){showEnd('🏆 Quest Completed','आपने सभी 10 checkpoints पूरे कर लिए। कुल अंक: '+t.score);hide('scannerCard');}else{show('scannerCard');}}
-function showEnd(title,txt){show('endCard');$('endTitle').textContent=title;$('endText').textContent=txt;}
-async function startScanner(){if(!CODE){alert('पहले Team Code से login करें।');return;}if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){$('scanMsg').textContent='Camera के लिए इस पेज को HTTPS पर खोलें और browser permission दें।';return;}if(!window.Html5Qrcode){$('scanMsg').textContent='Scanner library लोड नहीं हुई; internet चालू करके refresh करें।';return;}stopScanner();scanner=new Html5Qrcode('reader');$('scanMsg').textContent='Camera शुरू हो रहा है…';try{await scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:230,height:230}},onDecoded,()=>{});$('scanMsg').textContent='Checkpoint QR को कैमरे के सामने रखें।';}catch(e){$('scanMsg').textContent='Camera नहीं खुला: browser settings में Camera permission Allow करें। '+e.message;scanner=null;}}
-function stopScanner(){if(scanner){const s=scanner;scanner=null;s.stop().catch(()=>{}).finally(()=>s.clear().catch(()=>{}));}}
-async function onDecoded(raw){if(busy)return;busy=true;stopScanner();$('scanMsg').textContent='QR सत्यापित हो रहा है…';const a=String(raw).trim().split('|');if(a.length!==3||a[0]!=='MAIHARQUEST'){busy=false;$('scanMsg').textContent='यह Maihar Heritage Quest QR नहीं है।';return;}try{const r=await api('checkpoint',{code:CODE,stop:a[1],token:a[2]});if(!r.ok){if(r.gameOver){showEnd('Eliminated',r.message);hide('scannerCard');}else $('scanMsg').textContent=r.message;busy=false;return;}token=a[2];showClue(r);}catch(e){$('scanMsg').textContent=e.message;}busy=false;}
-function showClue(r){hide('scannerCard');show('clueCard');hide('mapActions');hide('answerMsg');$('stopTag').textContent='CHECKPOINT '+r.stop+' / '+r.total+' • '+r.name;$('clueText').textContent=r.clue;$('options').innerHTML='';r.options.forEach((o,i)=>{const l=document.createElement('label');l.className='option';const inp=document.createElement('input');inp.type='radio';inp.name='answer';inp.value=o;const span=document.createElement('span');span.textContent=String.fromCharCode(65+i)+'. '+o;l.append(inp,span);$('options').append(l);});$('submitBtn').disabled=false;}
-$('answerForm').addEventListener('submit',async ev=>{ev.preventDefault();const chosen=document.querySelector('input[name=answer]:checked');if(!chosen){$('answerMsg').textContent='पहले एक विकल्प चुनें।';show('answerMsg');return;}if(busy)return;busy=true;$('submitBtn').disabled=true;try{const stop=Number(($('stopTag').textContent.match(/CHECKPOINT (\d+)/)||[])[1]);const r=await api('answer',{code:CODE,stop,token,answer:chosen.value});if(!r.ok){$('answerMsg').textContent=r.message;show('answerMsg');$('submitBtn').disabled=false;busy=false;return;}show('answerMsg');if(r.wrong){$('answerMsg').className='notice bad';$('answerMsg').textContent=r.message;hide('scannerCard');showEnd('🔒 Team Eliminated',r.message);$('teamState').textContent='Eliminated';refreshBoard();}else{$('answerMsg').className='notice good';$('answerMsg').textContent='सही उत्तर! +100 अंक। कुल अंक: '+r.score;$('score').textContent=r.score;$('progress').textContent=r.completed+'/10';$('mapLink').href=r.mapUrl;show('mapActions');if(r.final){$('teamState').textContent='Completed';showEnd('🏆 Quest Completed','सभी 10 checkpoints पूरे। कुल अंक: '+r.score);hide('scannerCard');}refreshBoard();}}catch(e){$('answerMsg').textContent=e.message;show('answerMsg');$('submitBtn').disabled=false;}busy=false;});
-async function refreshBoard(){try{const r=await api('leaderboard');if(!r.ok)throw Error(r.message);$('board').innerHTML='';if(!r.rows.length){$('board').textContent='अभी कोई registered team नहीं।';return;}r.rows.forEach((t,i)=>{const d=document.createElement('div');d.className='row';const rank=document.createElement('b');rank.textContent=i+1;const nm=document.createElement('span');nm.textContent=t.name+' · '+t.completedCount+'/10';const sc=document.createElement('b');sc.textContent=t.score+' pts';d.append(rank,nm,sc);$('board').append(d);});}catch(e){$('board').textContent=e.message;}}
-function openAdmin(){show('adminCard');location.hash='admin';}
-async function adminLogin(){PIN=$('adminPin').value;try{const r=await api('adminLogin',{pin:PIN});if(!r.ok)throw Error('Admin PIN गलत है।');hide('adminLogin');show('adminPanel');refreshAdmin();}catch(e){$('adminMsg').textContent=e.message;}}
-async function registerTeam(){const name=$('newName').value.trim();if(!name){alert('Team Name भरें।');return;}try{const r=await api('registerTeam',{pin:PIN,name,members:$('newMembers').value,mobile:$('newMobile').value});if(!r.ok)throw Error(r.message);const t=r.team;$('createdTeam').innerHTML='';const strong=document.createElement('b');strong.textContent='Registration सफल — '+t.name;const p=document.createElement('p');p.textContent='Team Code: '+t.code+' (टीम को यह code दें)';const b=document.createElement('button');b.textContent='Copy Team Code';b.onclick=()=>navigator.clipboard.writeText(t.code);$('createdTeam').append(strong,p,b);show('createdTeam');$('newName').value='';$('newMembers').value='';$('newMobile').value='';refreshAdmin();refreshBoard();}catch(e){alert(e.message);}}
-async function refreshAdmin(){try{const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message);adminRows=r.teams;$('teamsBody').innerHTML='';let active=0,elim=0,done=0;adminRows.forEach(t=>{if(t.failed)elim++;else if(t.finished)done++;else active++;const tr=document.createElement('tr');[t.code,t.name+(t.members?' — '+t.members:''),t.score,t.completedCount+'/10',t.failed?'Eliminated':t.finished?'Completed':'Active'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});$('teamsBody').append(tr);});$('adminStats').textContent='Total: '+adminRows.length+' | Active: '+active+' | Eliminated: '+elim+' | Completed: '+done;}catch(e){$('adminMsg').textContent=e.message;}}
-function downloadCsv(){const rows=[['Team Code','Team Name','Members','Mobile','Score','Completed checkpoints','Next checkpoint','Status','Attempts'],...adminRows.map(t=>[t.code,t.name,t.members,t.mobile,t.score,t.completedCount,t.nextStop,t.failed?'Eliminated':t.finished?'Completed':'Active',t.attempts])];const csv='\\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download='Maihar_Heritage_Quest_Teams.csv';a.click();URL.revokeObjectURL(a.href);}
-async function makeQrSheet(){try{const r=await api('dashboard',{pin:PIN});if(!r.ok)throw Error(r.message);$('qrSheet').innerHTML='';r.checkpoints.forEach(cp=>{const d=document.createElement('div');d.className='qrcard';const b=document.createElement('b');b.textContent='Checkpoint '+cp.stop+' — '+cp.name;const img=document.createElement('img');img.alt='Checkpoint QR '+cp.stop;img.src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(cp.payload);const note=document.createElement('div');note.className='small';note.textContent='केवल game page के scanner से scan करें';d.append(b,img,note);$('qrSheet').append(d);});}catch(e){alert(e.message);}}
-if(location.hash==='#admin')show('adminCard');
-if(CODE){$('teamCode').value=CODE;}
-</script></body></html>
+
+if(API) {
+  $('apiUrl').value=API;
+  $('setup').classList.add('hidden');
+}
+if(location.hash==='#admin') $('adminCard').classList.remove('hidden');
+if(CODE) $('teamCode').value=CODE;
+
+function toggleSetup() {
+  show('setup');
+  $('setup').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function saveApi() {
+  API=$('apiUrl').value.trim();
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/.test(API)) {
+    $('setupMsg').textContent='Valid deployed Apps Script /exec URL डालें।';
+    return;
+  }
+  localStorage.setItem('mhq_api',API);
+  $('setupMsg').textContent='Saved';
+  $('setup').classList.add('hidden');
+  refreshBoard();
+}
+function api(action,params={}) {
+  return new Promise((resolve,reject)=>{
+    if(!API) { reject(new Error('पहले Apps Script URL सेट करें।')); return; }
+    const cb='mhqcb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    const q=new URLSearchParams({api:'1',action,callback:cb,...params});
+    let timer=setTimeout(()=>{
+      cleanup();
+      reject(new Error('Server timeout. URL/deployment जाँचें।'));
+    },20000);
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cb];
+      s.remove();
+    }
+    window[cb]=(data)=>{ cleanup(); resolve(data); };
+    s.onerror=()=>{
+      cleanup();
+      reject(new Error('Backend नहीं खुला। Web App URL और deployment access जाँचें।'));
+    };
+    s.src=API+'?'+q.toString();
+    document.body.appendChild(s);
+  });
+}
+function show(id) { $(id).classList.remove('hidden'); }
+function hide(id) { $(id).classList.add('hidden'); }
+
+async function loginTeam() {
+  const c=$('teamCode').value.trim().toUpperCase();
+  $('loginMsg').textContent='Checking…';
+  try {
+    const r=await api('login',{code:c});
+    if(!r.ok) throw Error(r.message);
+    CODE=r.team.code;
+    localStorage.setItem('mhq_code',CODE);
+    $('teamCode').value=CODE;
+    showTeam(r.team);
+    $('loginMsg').textContent='';
+  } catch(e) { $('loginMsg').textContent=e.message; }
+}
+function showTeam(t) {
+  current=t;
+  hide('loginCard');
+  show('teamGame');
+  $('teamName').textContent=t.name;
+  $('teamCodeLabel').textContent='Team Code: '+t.code;
+  $('score').textContent=t.score;
+  $('progress').textContent=t.completedCount+'/10';
+  $('teamState').textContent=t.failed?'Eliminated':t.finished?'Completed':'Active';
+  if(t.failed) {
+    showEnd('🔒 Team Eliminated','गलत उत्तर के कारण टीम का प्रयास समाप्त हो गया है।');
+    hide('scannerCard');
+  } else if(t.finished) {
+    showEnd('🏆 Quest Completed','आपने सभी 10 checkpoints पूरे कर लिए। कुल अंक: '+t.score);
+    hide('scannerCard');
+  } else {
+    show('scannerCard');
+  }
+}
+function showEnd(title,txt) {
+  show('endCard');
+  $('endTitle').textContent=title;
+  $('endText').textContent=txt;
+}
+async function startScanner() {
+  if(!CODE) { alert('पहले Team Code से login करें।'); return; }
+  if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia) {
+    $('scanMsg').textContent='Camera के लिए इस पेज को HTTPS पर खोलें और browser permission दें.';
+    return;
+  }
+  if(!window.Html5Qrcode) {
+    $('scanMsg').textContent='Scanner library लोड नहीं हुई; internet चालू करके refresh करें।';
+    return;
+  }
+  stopScanner();
+  scanner=new Html5Qrcode('reader');
+  $('scanMsg').textContent='Camera शुरू हो रहा है…';
+  try {
+    await scanner.start(
+      {facingMode:'environment'},
+      {fps:10,qrbox:{width:230,height:230}},
+      onDecoded,
+      ()=>{}
+    );
+    $('scanMsg').textContent='Checkpoint QR को कैमरे के सामने रखें।';
+  } catch(e) {
+    $('scanMsg').textContent='Camera नहीं खुला: browser settings में Camera permission Allow करें। '+e.message;
+    scanner=null;
+  }
+}
+function stopScanner() {
+  if(scanner) {
+    const s=scanner;
+    scanner=null;
+    s.stop().catch(()=>{}).finally(()=>s.clear().catch(()=>{}));
+  }
+}
+async function onDecoded(raw) {
+  if(busy) return;
+  busy=true;
+  stopScanner();
+  $('scanMsg').textContent='QR सत्यापित हो रहा है…';
+  const a=String(raw).trim().split('|');
+  if(a.length!==3||a[0]!=='MAIHARQUEST') {
+    busy=false;
+    $('scanMsg').textContent='यह Maihar Heritage Quest QR नहीं है।';
+    return;
+  }
+  try {
+    const r=await api('checkpoint',{code:CODE,stop:a[1],token:a[2]});
+    if(!r.ok) {
+      if(r.gameOver) {
+        showEnd('Eliminated',r.message);
+        hide('scannerCard');
+      } else {
+        $('scanMsg').textContent=r.message;
+      }
+      busy=false;
+      return;
+    }
+    token=a[2];
+    showClue(r);
+  } catch(e) {
+    $('scanMsg').textContent=e.message;
+  }
+  busy=false;
+}
+function showClue(r) {
+  hide('scannerCard');
+  show('clueCard');
+  hide('mapActions');
+  hide('answerMsg');
+  $('stopTag').textContent='CHECKPOINT '+r.stop+' / '+r.total+' • '+r.name;
+  $('clueText').textContent=r.clue;
+  $('options').innerHTML='';
+  r.options.forEach((o,i)=>{
+    const l=document.createElement('label');
+    l.className='option';
+    const inp=document.createElement('input');
+    inp.type='radio'; inp.name='answer'; inp.value=o;
+    const span=document.createElement('span');
+    span.textContent=String.fromCharCode(65+i)+'. '+o;
+    l.append(inp,span);
+    $('options').append(l);
+  });
+  $('submitBtn').disabled=false;
+}
+$('answerForm').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const chosen=document.querySelector('input[name="answer"]:checked');
+  if(!chosen) {
+    $('answerMsg').textContent='पहले एक विकल्प चुनें।';
+    show('answerMsg');
+    return;
+  }
+  if(busy) return;
+  busy=true;
+  $('submitBtn').disabled=true;
+  try {
+    const stop=Number(($('stopTag').textContent.match(/CHECKPOINT (\d+)/)||[])[1]);
+    const r=await api('answer',{code:CODE,stop,token,answer:chosen.value});
+    if(!r.ok) {
+      $('answerMsg').textContent=r.message;
+      show('answerMsg');
+      $('submitBtn').disabled=false;
+      busy=false;
+      return;
+    }
+    show('answerMsg');
+    if(r.wrong) {
+      $('answerMsg').className='notice bad';
+      $('answerMsg').textContent=r.message;
+      hide('scannerCard');
+      showEnd('🔒 Team Eliminated',r.message);
+      $('teamState').textContent='Eliminated';
+      refreshBoard();
+    } else {
+      $('answerMsg').className='notice good';
+      $('answerMsg').textContent='सही उत्तर! +100 अंक। कुल अंक: '+r.score;
+      $('score').textContent=r.score;
+      $('progress').textContent=r.completed+'/10';
+      $('mapLink').href=r.mapUrl;
+      show('mapActions');
+      if(r.final) {
+        $('teamState').textContent='Completed';
+        showEnd('🏆 Quest Completed','सभी 10 checkpoints पूरे। कुल अंक: '+r.score);
+        hide('scannerCard');
+      }
+      refreshBoard();
+    }
+  } catch(e) {
+    $('answerMsg').textContent=e.message;
+    show('answerMsg');
+    $('submitBtn').disabled=false;
+  }
+  busy=false;
+});
+async function refreshBoard() {
+  try {
+    const r=await api('leaderboard');
+    if(!r.ok) throw Error(r.message);
+    $('board').innerHTML='';
+    if(!r.rows.length) {
+      $('board').textContent='अभी कोई registered team नहीं।';
+      return;
+    }
+    r.rows.forEach((t,i)=>{
+      const d=document.createElement('div');
+      d.className='row';
+      const rank=document.createElement('b'); rank.textContent=i+1;
+      const nm=document.createElement('span'); nm.textContent=t.name+' · '+t.completedCount+'/10';
+      const sc=document.createElement('b'); sc.textContent=t.score+' pts';
+      d.append(rank,nm,sc);
+      $('board').append(d);
+    });
+  } catch(e) { $('board').textContent=e.message; }
+}
+function openAdmin() { show('adminCard'); location.hash='admin'; }
+async function adminLogin() {
+  PIN=$('adminPin').value;
+  try {
+    const r=await api('adminLogin',{pin:PIN});
+    if(!r.ok) throw Error('Admin PIN गलत है।');
+    hide('adminLogin');
+    show('adminPanel');
+    refreshAdmin();
+  } catch(e) { $('adminMsg').textContent=e.message; }
+}
+async function registerTeam() {
+  const name=$('newName').value.trim();
+  if(!name) { alert('Team Name भरें।'); return; }
+  try {
+    const r=await api('registerTeam',{
+      pin:PIN,name,members:$('newMembers').value,mobile:$('newMobile').value
+    });
+    if(!r.ok) throw Error(r.message);
+    const t=r.team;
+    $('createdTeam').innerHTML='';
+    const strong=document.createElement('b');
+    strong.textContent='Registration सफल — '+t.name;
+    const p=document.createElement('p');
+    p.textContent='Team Code: '+t.code+' (टीम को यह code दें)';
+    const b=document.createElement('button');
+    b.textContent='Copy Team Code';
+    b.onclick=()=>navigator.clipboard.writeText(t.code);
+    $('createdTeam').append(strong,p,b);
+    show('createdTeam');
+    $('newName').value=''; $('newMembers').value=''; $('newMobile').value='';
+    refreshAdmin(); refreshBoard();
+  } catch(e) { alert(e.message); }
+}
+async function refreshAdmin() {
+  try {
+    const r=await api('dashboard',{pin:PIN});
+    if(!r.ok) throw Error(r.message);
+    adminRows=r.teams;
+    $('teamsBody').innerHTML='';
+    let active=0,elim=0,done=0;
+    adminRows.forEach(t=>{
+      if(t.failed) elim++; else if(t.finished) done++; else active++;
+      const tr=document.createElement('tr');
+      [
+        t.code,
+        t.name+(t.members?' — '+t.members:''),
+        t.score,
+        t.completedCount+'/10',
+        t.failed?'Eliminated':t.finished?'Completed':'Active'
+      ].forEach(v=>{
+        const td=document.createElement('td');
+        td.textContent=v;
+        tr.append(td);
+      });
+      $('teamsBody').append(tr);
+    });
+    $('adminStats').textContent='Total: '+adminRows.length+' | Active: '+active+' | Eliminated: '+elim+' | Completed: '+done;
+  } catch(e) { $('adminMsg').textContent=e.message; }
+}
+function downloadCsv() {
+  const rows=[
+    ['Team Code','Team Name','Members','Mobile','Score','Completed checkpoints','Next checkpoint','Status','Attempts'],
+    ...adminRows.map(t=>[
+      t.code,t.name,t.members,t.mobile,t.score,t.completedCount,t.nextStop,
+      t.failed?'Eliminated':t.finished?'Completed':'Active',t.attempts
+    ])
+  ];
+  const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='Maihar_Heritage_Quest_Teams.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+async function makeQrSheet() {
+  try {
+    const r=await api('dashboard',{pin:PIN});
+    if(!r.ok) throw Error(r.message);
+    $('qrSheet').innerHTML='';
+    r.checkpoints.forEach(cp=>{
+      const d=document.createElement('div'); d.className='qrcard';
+      const b=document.createElement('b'); b.textContent='Checkpoint '+cp.stop+' — '+cp.name;
+      const img=document.createElement('img');
+      img.alt='Checkpoint QR '+cp.stop;
+      img.src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(cp.payload);
+      const note=document.createElement('div'); note.className='small';
+      note.textContent='केवल game page के scanner से scan करें';
+      d.append(b,img,note);
+      $('qrSheet').append(d);
+    });
+  } catch(e) { alert(e.message); }
+}
+if(location.hash==='#admin') show('adminCard');
+</script>
+</body>
+</html>
